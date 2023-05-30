@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 void main() {
   runApp(const MyApp());
@@ -153,15 +154,17 @@ class _MyHomePage2State extends State<BankCounter> {
   }
 
 //叫號
-  void _callNumber(int _staffId) async {
+  void _callNumber(int _staffId, int _seconds) async {
     if (_waiting != 0 && processPeople[_staffId] == 'idle') {
       setState(() {
         processPeople[_staffId] = waitingPeople[0].toString();
         waitingPeople.removeAt(0);
         _waiting--;
       });
-      Future.delayed(const Duration(milliseconds: 5000), () {
-        _done(_staffId);
+      Future.delayed(Duration(milliseconds: _seconds), () {
+        _done(
+          _staffId,
+        );
       });
     }
   }
@@ -182,8 +185,10 @@ class _MyHomePage2State extends State<BankCounter> {
 
     for (var a = 0; a < widget.staff; a++) {
       var staffId = a + 1;
+      var rad = Random();
+      int _second = 5000 + rad.nextInt(5000); //隨機處理時間 ５～１０ｓ
       Future.delayed(const Duration(milliseconds: 10), () {
-        _callNumber(a);
+        _callNumber(a, _second);
       });
 
       DataRow row = DataRow(
