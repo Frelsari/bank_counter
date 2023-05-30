@@ -129,11 +129,13 @@ class BankCounter extends StatefulWidget {
 }
 
 class _MyHomePage2State extends State<BankCounter> {
-  int _waiting = 0;
-  int _counter = 0;
-  List waitingPeople = [];
-  List processPeople = [];
-  List<List<String>> finishList = [];
+  int _waiting = 0; // 等待人數
+  int _counter = 0; // 增加人數
+  List waitingPeople = []; //等待序列
+  List processPeople = []; //各櫃台處理名單
+  int _nownumber = 0; //當前人員
+  int _nowstaff = 0; //當前櫃檯
+  List<List<String>> finishList = []; //各櫃台處理完畢名單
 
   @override
   void initState() {
@@ -153,11 +155,13 @@ class _MyHomePage2State extends State<BankCounter> {
     });
   }
 
-//叫號
+//叫號 & 處理
   void _callNumber(int _staffId, int _seconds) async {
     if (_waiting != 0 && processPeople[_staffId] == 'idle') {
       setState(() {
-        processPeople[_staffId] = waitingPeople[0].toString();
+        _nowstaff = _staffId + 1;
+        _nownumber = waitingPeople[0];
+        processPeople[_staffId] = _nownumber.toString();
         waitingPeople.removeAt(0);
         _waiting--;
       });
@@ -198,7 +202,7 @@ class _MyHomePage2State extends State<BankCounter> {
               width: 100.0,
               child: Center(
                   child: Text(
-                "行員 " + staffId.toString(),
+                "櫃檯 " + staffId.toString(),
               )),
             ),
           ),
@@ -240,9 +244,11 @@ class _MyHomePage2State extends State<BankCounter> {
       ),
       body: ListView(children: [
         const SizedBox(height: 10.0),
-        Center(
-          child: Text("等待人數 : $_waiting"),
-        ),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text("等待人數 : $_waiting 人"),
+          Text("  ->     " + _nownumber.toString() + "號     "),
+          Text("請至 " + _nowstaff.toString() + "號櫃檯"),
+        ]),
         const SizedBox(height: 50.0),
         // Center(
         //     child: Text("等待顧客 : " +
@@ -266,7 +272,7 @@ class _MyHomePage2State extends State<BankCounter> {
             DataColumn(
               label: SizedBox(
                 width: 100.0,
-                child: Center(child: Text('處理中')),
+                child: Center(child: Text('服務中')),
               ),
             ),
             DataColumn(
