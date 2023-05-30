@@ -160,7 +160,7 @@ class _MyHomePage2State extends State<BankCounter> {
         waitingPeople.removeAt(0);
         _waiting--;
       });
-      Future.delayed(const Duration(milliseconds: 1500), () {
+      Future.delayed(const Duration(milliseconds: 5000), () {
         _done(_staffId);
       });
     }
